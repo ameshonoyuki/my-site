@@ -43,7 +43,7 @@ const About: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1>私について</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">私について</h1>
             <p className="subtitle">クリエイティブなソリューションでビジネスの成長をサポートします</p>
           </motion.div>
         </div>

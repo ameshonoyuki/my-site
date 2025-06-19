@@ -1,14 +1,46 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 
+// ---------- 背景画像コンポーネント ---------- //
+const BackgroundImages: React.FC = () => {
+  const backgroundImages = [
+    { id: 1, src: '/images/work-6.png', alt: 'Background 1' },
+    { id: 2, src: '/images/work-7.png', alt: 'Background 2' },
+    { id: 3, src: '/images/work-8.png', alt: 'Background 3' },
+  ];
+
+  return (
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div className="h-full w-full flex flex-col items-center justify-center gap-8 py-8">
+        {backgroundImages.map((img) => (
+          <div key={img.id} className="w-1/2 max-w-md opacity-50">
+            <img 
+              src={img.src} 
+              alt={img.alt}
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ---------- ユーティリティコンポーネント ---------- //
-const Section: React.FC<{ id: string; title: string; children: React.ReactNode; className?: string }> = ({ id, title, children, className = '' }) => (
+const Section: React.FC<{ 
+  id: string; 
+  title: string; 
+  children: React.ReactNode; 
+  className?: string;
+  titleClassName?: string;
+}> = ({ id, title, children, className = '', titleClassName = '' }) => (
   <section id={id} className={`py-12 md:py-16 ${className}`}>
     <div className="container mx-auto px-4">
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">{title}</h2>
+      <h2 className={`text-3xl md:text-4xl font-bold text-center mb-8 ${titleClassName}`}>
+        {title}
+      </h2>
       {children}
     </div>
   </section>
@@ -21,21 +53,33 @@ const works = [
     title: 'にんだお 蛇の目',
     year: '2024年',
     image: '/src/assets/images/work-1.png',
-    category: 'AIアート'
+    category: 'AIアート',
+    colSpan: 1
   },
   {
     id: 2,
     title: '天空の踊り子',
     year: '2024年',
     image: '/src/assets/images/work-2.png',
-    category: 'AIアート'
+    category: 'AIアート',
+    colSpan: 2
+  },
+  {
+    id: 4,
+    title: '天空の踊り子動画',
+    year: '2024年',
+    video: '/src/assets/videos/work-6.mp4',
+    thumbnail: '/src/assets/images/work-2.png',
+    category: '動画作品',
+    colSpan: 2
   },
   {
     id: 3,
     title: 'イケてる痛車',
     year: '2024年',
     image: '/src/assets/images/work-3.png',
-    category: 'AIアート'
+    category: 'AIアート',
+    colSpan: 1
   }
 ];
 
@@ -57,21 +101,32 @@ const colors = {
 
 // ---------- 各セクションコンポーネント ---------- //
 // レインボーグラデーションアニメーションのスタイル
-const rainbowGlow = {
-  background: 'linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000)',
-  backgroundSize: '800% 800%',
-  WebkitBackgroundClip: 'text',
+const rainbowGlow: React.CSSProperties = {
+  background: 'linear-gradient(45deg, #f72585, #b5179e, #7209b7, #560bad, #480ca8, #3a0ca3, #3f37c9, #4cc9f0)',
+  backgroundSize: '300% 300%',
+  WebkitBackgroundClip: 'text' as const,
   WebkitTextFillColor: 'transparent',
   animation: 'rainbow 8s ease infinite',
-  textShadow: '0 0 15px rgba(255,255,255,0.5)',
+  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(255, 255, 255, 0.2), 1px -1px 0 rgba(255, 255, 255, 0.2), -1px 1px 0 rgba(255, 255, 255, 0.2), 1px 1px 0 rgba(255, 255, 255, 0.2)',
   display: 'inline-block',
   padding: '0 10px',
   borderRadius: '10px',
+  transition: 'all 0.3s ease',
+  position: 'relative' as const,
+  zIndex: 1,
+  fontFamily: 'Noto Serif JP, serif',
 };
 
 // グローバルスタイルを追加するためのコンポーネント
 const GlobalStyles = () => {
-  useEffect(() => {
+  React.useEffect(() => {
+    // フォントのプリロード
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // アニメーションのキーフレームを動的に追加
     const style = document.createElement('style');
     style.textContent = `
       @keyframes rainbow {
@@ -79,9 +134,14 @@ const GlobalStyles = () => {
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
+      body {
+        font-family: 'Noto Serif JP', serif;
+      }
     `;
     document.head.appendChild(style);
+
     return () => {
+      document.head.removeChild(link);
       document.head.removeChild(style);
     };
   }, []);
@@ -89,7 +149,7 @@ const GlobalStyles = () => {
 };
 
 const Hero: React.FC = () => (
-  <div className={`relative min-h-screen flex flex-col justify-start pt-32 md:pt-40 items-center text-center overflow-hidden ${colors.background}`}>
+  <div className="relative min-h-screen flex flex-col justify-start pt-32 md:pt-40 items-center text-center overflow-hidden bg-emerald-50">
     <GlobalStyles />
     <motion.div
       className="text-center"
@@ -97,38 +157,50 @@ const Hero: React.FC = () => (
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <motion.h1
-        className={`text-6xl md:text-8xl font-black mb-6`}
-        style={rainbowGlow}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        アメショのユキ
-      </motion.h1>
-      <motion.div 
-        className="w-full flex justify-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        <p className={`mt-6 text-xl md:text-2xl ${colors.textLight} font-medium max-w-2xl leading-relaxed tracking-wider`}>
-          <span className={`${colors.primary} font-semibold`}>デジタルアーティスト</span> / <span className={`${colors.primary} font-semibold`}>イラストレーター</span>
-        </p>
-      </motion.div>
+      <div className="relative">
+        <motion.h1
+          className={`text-5xl md:text-7xl lg:text-8xl font-black mb-6 relative z-10`}
+          style={{
+            ...rainbowGlow,
+            fontFamily: '"Noto Serif JP", serif',
+            fontWeight: 900,
+            letterSpacing: '0.05em'
+          }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          whileHover={{ 
+            scale: 1.02,
+            textShadow: '3px 3px 6px rgba(0, 0, 0, 0.4), -2px -2px 0 rgba(255, 255, 255, 0.3), 2px -2px 0 rgba(255, 255, 255, 0.3), -2px 2px 0 rgba(255, 255, 255, 0.3), 2px 2px 0 rgba(255, 255, 255, 0.3)'
+          }}
+        >
+          アメショのユキのアトリエ
+        </motion.h1>
+        <motion.p 
+          className="text-2xl md:text-3xl text-gray-800 italic tracking-wider mt-4 text-center font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          style={{ fontFamily: '"Noto Serif JP", serif' }}
+        >
+          デジタルアーティスト / イラストレーター
+        </motion.p>
+      </div>
+
       <motion.div className="w-full flex justify-center">
         <motion.p 
-          className={`mt-4 ${colors.textLight} text-sm md:text-base whitespace-nowrap`}
+          className={`mt-6 ${colors.textLight} text-base md:text-lg whitespace-nowrap font-light tracking-wider`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
+          style={{ fontFamily: '"Noto Serif JP", serif' }}
         >
           幻想的な世界観と鮮やかな色彩で、見る人を魅了するアートを創り続けています。
         </motion.p>
       </motion.div>
       
       {/* 作品ギャラリー */}
-      <div className={`w-full ${colors.background} pt-20 pb-32`}>
+      <div className="w-full bg-emerald-50 pt-20 pb-32">
         <motion.div 
           className="w-full max-w-6xl mx-auto px-4"
           initial={{ opacity: 0, y: 20 }}
@@ -137,11 +209,11 @@ const Hero: React.FC = () => (
           transition={{ duration: 0.8 }}
         >
           <h2 className={`text-2xl md:text-3xl font-bold text-center mb-12 ${colors.text}`}>作品一覧</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {works.map((work) => (
               <motion.div
                 key={work.id}
-                className={`group relative overflow-hidden rounded-2xl ${colors.card} ${colors.shadow} border ${colors.border} ${colors.hover} transition-all duration-300`}
+                className={`group relative overflow-hidden rounded-2xl ${colors.card} ${colors.shadow} border ${colors.border} ${colors.hover} transition-all duration-300 ${work.colSpan === 2 ? 'md:col-span-2' : ''}`}
                 whileHover={{ y: -8, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -149,12 +221,49 @@ const Hero: React.FC = () => (
                 transition={{ duration: 0.5 }}
               >
                 <div className="aspect-square overflow-hidden">
-                  <img 
-                    src={work.image} 
-                    alt={work.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  {work.video ? (
+                    <div className="relative w-full h-full">
+                      <video 
+                        ref={(el) => {
+                          // Store video reference for manual control
+                          if (el) el.muted = true;
+                        }}
+                        src={work.video}
+                        poster={work.thumbnail}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                        onClick={(e) => {
+                          const video = e.currentTarget;
+                          video.paused ? video.play() : video.pause();
+                        }}
+                      />
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-30 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const video = e.currentTarget.previousSibling as HTMLVideoElement;
+                          video.play();
+                        }}
+                      >
+                        <div className="bg-white bg-opacity-80 rounded-full p-3 group-hover:scale-110 transition-transform">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img 
+                      src={work.image} 
+                      alt={work.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  )}
                 </div>
                 <div className="p-6">
                   <h3 className={`text-xl font-bold ${colors.text} mb-3`}>{work.title}</h3>
@@ -186,7 +295,7 @@ const Hero: React.FC = () => (
 );
 
 const About: React.FC = () => (
-  <Section id="about" title="About">
+  <Section id="about" title="About" titleClassName="text-emerald-800">
     <div className="grid gap-8 lg:grid-cols-2 items-center">
       <motion.div 
         className="flex justify-center"
@@ -251,65 +360,75 @@ const featuredContent = [
   }
 ];
 
-const Projects: React.FC = () => (
-  <Section id="projects" title="Featured Works" className="pt-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
-      {featuredContent.map((item, index) => (
-        <motion.div
-          key={item.title}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.1 }}
-          viewport={{ once: true }}
-        >
-          <div className={`h-full rounded-2xl overflow-hidden shadow-lg ${colors.card} border ${colors.border} ${colors.hover} transition-all duration-300`} style={{ marginBottom: '0.5rem' }}>
-            <div className="relative aspect-square overflow-hidden">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'https://placehold.co/600x600/e5e7eb/9ca3af?text=' + encodeURIComponent(item.title);
-                }}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  maxWidth: '90%',
-                  maxHeight: '90%',
-                  objectFit: 'contain'
-                }}
-              />
-            </div>
-            <div className="p-4">
-              <div className="flex items-center mb-2">
-                <span className={`${item.bgColor} ${item.textColor} p-2 rounded-lg`}>
-                  {item.icon}
-                </span>
-                <h3 className={`ml-3 text-xl font-bold ${colors.text}`}>{item.title}</h3>
-              </div>
-              <p className={`${colors.textLight} text-sm mb-3`}>{item.description}</p>
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center ${colors.primary} hover:underline font-medium`}
+const Projects: React.FC = () => {
+  return (
+    <div className="w-full bg-emerald-50 py-12">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-emerald-800">
+          作品一覧
+        </h2>
+        <div className="w-full flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl">
+            {featuredContent.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="w-full"
               >
-                {item.buttonText}
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </a>
-            </div>
+                <div className={`h-full rounded-2xl overflow-hidden shadow-lg ${colors.card} border ${colors.border} ${colors.hover} transition-all duration-300`}>
+                  <div className="relative aspect-square overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://placehold.co/600x600/e5e7eb/9ca3af?text=' + encodeURIComponent(item.title);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: '90%',
+                        maxHeight: '90%',
+                        objectFit: 'contain'
+                      }}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center mb-2">
+                      <span className={`${item.bgColor} ${item.textColor} p-2 rounded-lg`}>
+                        {item.icon}
+                      </span>
+                      <h3 className={`ml-3 text-xl font-bold ${colors.text}`}>{item.title}</h3>
+                    </div>
+                    <p className={`${colors.textLight} text-sm mb-3`}>{item.description}</p>
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center ${colors.primary} hover:underline font-medium`}
+                    >
+                      {item.buttonText}
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
-      ))}
+        </div>
+      </div>
     </div>
-  </Section>
-);
+  );
+};
 
 const Contact: React.FC = () => (
-  <Section id="contact" title="Contact">
+  <Section id="contact" title="Contact" titleClassName="text-emerald-800">
     <form
       className="mx-auto max-w-xl space-y-6"
       action="https://formspree.io/f/your‑id"
@@ -317,7 +436,7 @@ const Contact: React.FC = () => (
     >
       <input type="hidden" name="_subject" value="Portfolio Inquiry" />
       <div>
-        <label className="block mb-1 text-slate-300">Name</label>
+        <label className="block mb-1 text-emerald-800 font-medium">Name</label>
         <input
           name="name"
           required
@@ -326,7 +445,7 @@ const Contact: React.FC = () => (
         />
       </div>
       <div>
-        <label className="block mb-1 text-slate-300">Email</label>
+        <label className="block mb-1 text-emerald-800 font-medium">Email</label>
         <input
           type="email"
           name="email"
@@ -336,7 +455,7 @@ const Contact: React.FC = () => (
         />
       </div>
       <div>
-        <label className="block mb-1 text-slate-300">Message</label>
+        <label className="block mb-1 text-emerald-800 font-medium">Message</label>
         <textarea
           name="message"
           required
@@ -361,30 +480,31 @@ const Footer: React.FC = () => (
 // ---------- ルートコンポーネント ---------- //
 const App: React.FC = () => {
   return (
-    <div className={`min-h-screen ${colors.background} ${colors.text} font-sans`}>
+    <div className="min-h-screen bg-emerald-50 font-sans relative">
+      <BackgroundImages />
       <div className="relative z-10">
         <Hero />
       </div>
       
-      <div className={`py-20 px-4 sm:px-6 lg:px-8 ${colors.background}`}>
+      <div className={`py-20 px-4 sm:px-6 lg:px-8`}>
         <div className="max-w-7xl mx-auto">
           <Projects />
         </div>
       </div>
       
-      <div className={`py-20 px-4 sm:px-6 lg:px-8 ${colors.background}`}>
+      <div className={`py-20 px-4 sm:px-6 lg:px-8`}>
         <div className="max-w-7xl mx-auto">
           <About />
         </div>
       </div>
       
-      <div className={`py-20 px-4 sm:px-6 lg:px-8 ${colors.background}`}>
+      <div className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <Contact />
         </div>
       </div>
       
-      <footer className={`py-12 px-4 sm:px-6 lg:px-8 border-t ${colors.border} ${colors.background}`}>
+      <footer className={`py-12 px-4 sm:px-6 lg:px-8 border-t ${colors.border} bg-emerald-50`}>
         <div className="max-w-7xl mx-auto">
           <Footer />
         </div>

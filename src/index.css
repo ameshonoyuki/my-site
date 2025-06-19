@@ -1,15 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
-
 /* Base styles */
 body {
-  @apply bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 text-white min-h-screen;
-  font-family: 'Inter', sans-serif;
+  @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 min-h-screen;
+  font-family: 'Quicksand', 'M PLUS Rounded 1c', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
 /* Custom scrollbar */
@@ -19,21 +20,39 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  @apply bg-gray-800/50;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-purple-600 rounded-full hover:bg-purple-500 transition-colors;
+  @apply bg-emerald-600/50 rounded-full hover:bg-emerald-500/70 transition-colors;
 }
 
 /* Glassmorphism effect */
 .glass {
-  @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg;
+  @apply bg-white/5 backdrop-blur-lg border border-emerald-500/10 shadow-lg;
+  transition: all 0.3s ease;
+}
+
+.glass:hover {
+  @apply bg-white/10 border-emerald-500/20;
 }
 
 /* Gradient text */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400;
+}
+
+/* Text contrast improvements */
+h1, h2, h3, h4, h5, h6 {
+  @apply text-gray-100 font-medium;
+}
+
+p, li, span, div {
+  @apply text-gray-200;
+}
+
+a {
+  @apply text-emerald-400 hover:text-emerald-300 transition-colors;
 }
 
 /* Custom animations */

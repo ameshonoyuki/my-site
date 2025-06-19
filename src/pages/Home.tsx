@@ -145,7 +145,7 @@ const Home: React.FC = () => {
             className="text-center mb-20"
           >
             <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 text-sm font-medium mb-4">PORTFOLIO</span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
               Featured Works
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
@@ -268,7 +268,7 @@ const Home: React.FC = () => {
               <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 text-sm font-medium mb-4">
                 CONTACT
               </span>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
                 Get In Touch
               </h2>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
