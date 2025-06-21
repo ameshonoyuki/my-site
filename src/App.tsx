@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { FaXTwitter, FaInstagram, FaThreads } from 'react-icons/fa6';
 import { ArrowRight } from 'lucide-react';
 
 // ---------- 背景画像コンポーネント ---------- //
@@ -429,45 +430,49 @@ const Projects: React.FC = () => {
 
 const Contact: React.FC = () => (
   <Section id="contact" title="Contact" titleClassName="text-emerald-800">
-    <form
-      className="mx-auto max-w-xl space-y-6"
-      action="https://formspree.io/f/your‑id"
-      method="POST"
-    >
-      <input type="hidden" name="_subject" value="Portfolio Inquiry" />
-      <div>
-        <label className="block mb-1 text-emerald-800 font-medium">Name</label>
-        <input
-          name="name"
-          required
-          className="w-full rounded-xl bg-slate-800/60 py-3 px-4 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 text-white"
-          placeholder="Your name"
-        />
+    <div className="flex flex-col items-center justify-center space-y-8">
+      <div className="flex flex-wrap justify-center gap-8">
+        {/* X (Twitter) */}
+        <a 
+          href="https://twitter.com/kuroneko0618" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex flex-col items-center p-4 rounded-xl hover:bg-emerald-50 transition-colors duration-200 group"
+          aria-label="X (Twitter) でフォローする"
+        >
+          <FaXTwitter className="w-12 h-12 text-emerald-800 group-hover:text-emerald-600 transition-colors" />
+          <span className="mt-2 text-emerald-800 font-medium">X (Twitter)</span>
+        </a>
+        
+        {/* Instagram */}
+        <a 
+          href="https://instagram.com/ameshonoyuki" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex flex-col items-center p-4 rounded-xl hover:bg-emerald-50 transition-colors duration-200 group"
+          aria-label="Instagram でフォローする"
+        >
+          <FaInstagram className="w-12 h-12 text-emerald-800 group-hover:text-emerald-600 transition-colors" />
+          <span className="mt-2 text-emerald-800 font-medium">Instagram</span>
+        </a>
+        
+        {/* Threads */}
+        <a 
+          href="https://www.threads.net/@ameshonoyuki" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex flex-col items-center p-4 rounded-xl hover:bg-emerald-50 transition-colors duration-200 group"
+          aria-label="Threads でフォローする"
+        >
+          <FaThreads className="w-12 h-12 text-emerald-800 group-hover:text-emerald-600 transition-colors" />
+          <span className="mt-2 text-emerald-800 font-medium">Threads</span>
+        </a>
       </div>
-      <div>
-        <label className="block mb-1 text-emerald-800 font-medium">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          className="w-full rounded-xl bg-slate-800/60 py-3 px-4 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 text-white"
-          placeholder="you@example.com"
-        />
-      </div>
-      <div>
-        <label className="block mb-1 text-emerald-800 font-medium">Message</label>
-        <textarea
-          name="message"
-          required
-          rows={6}
-          className="w-full rounded-xl bg-slate-800/60 py-3 px-4 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 text-white"
-          placeholder="Tell me about your project…"
-        />
-      </div>
-      <Button type="submit" size="lg" className="gap-2 mx-auto flex">
-        Send <ArrowRight className="w-5 h-5" />
-      </Button>
-    </form>
+      
+      <p className="text-center text-emerald-700 max-w-2xl">
+        最新の作品や活動情報はSNSで発信しています。ぜひフォローしてください！
+      </p>
+    </div>
   </Section>
 );
 
