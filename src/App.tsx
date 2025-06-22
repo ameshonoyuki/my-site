@@ -366,22 +366,6 @@ const About: React.FC = () => (
   </Section>
 );
 
-const featuredContent = [
-  {
-    title: "OpenSea コレクション",
-    description: "NFTアート作品をOpenSeaで公開中。デジタルアートの世界をお楽しみください。",
-    link: "https://opensea.io/collection/bailarina-5",
-    image: "/my-site/assets/images/work-5.png",
-    buttonText: "コレクションを見る",
-    icon: (
-      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-        <path d="M12 6l-1.41 1.41L16.17 12l-5.58 5.59L12 19l7-7z"/>
-      </svg>
-    ),
-    bgColor: "bg-blue-50",
-    textColor: "text-blue-600"
-  },
   {
     title: "Stand.fm 番組",
     description: "デジタルアートや創作活動についてのトークを配信しています。お気軽にお聴きください。",
@@ -402,6 +386,53 @@ const featuredContent = [
 
 // モーダルコンポーネント
 const MediaModal: React.FC<{ isOpen: boolean; onClose: () => void; mediaUrl: string; mediaType: 'image' | 'video' | 'gif' }> = ({ isOpen, onClose, mediaUrl, mediaType }) => {
+  const [error, setError] = React.useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const mediaRef = React.useRef<HTMLImageElement | HTMLVideoElement | null>(null);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    
+    console.log('Opening modal with:', { mediaUrl, mediaType });
+    setError(null);
+    setIsLoading(true);
+    
+    // メディアの読み込みをチェック
+    const checkLoad = () => {
+      const media = mediaRef.current;
+      if (!media) return;
+      
+      // 読み込みエラーを検出
+      const handleError = () => {
+        console.error('Error loading media:', mediaUrl);
+        setError('メディアの読み込みに失敗しました');
+        setIsLoading(false);
+      };
+      
+      // 読み込み完了を検出
+      const handleLoad = () => {
+        console.log('Media loaded successfully:', mediaUrl);
+        setIsLoading(false);
+      };
+      
+      media.addEventListener('error', handleError);
+      media.addEventListener('load', handleLoad);
+      
+      // 画像の場合は読み込み状態をチェック
+      if ('complete' in media && media.complete) {
+        setIsLoading(false);
+      }
+      
+      return () => {
+        media.removeEventListener('error', handleError);
+        media.removeEventListener('load', handleLoad);
+      };
+    };
+    
+    const timer = setTimeout(checkLoad, 100);
+    return () => clearTimeout(timer);
+  }, [isOpen, mediaUrl, mediaType]);
+
   if (!isOpen) return null;
 
   return (
@@ -414,23 +445,62 @@ const MediaModal: React.FC<{ isOpen: boolean; onClose: () => void; mediaUrl: str
         >
           ✕
         </button>
-        <div className="w-full h-full flex items-center justify-center p-4">
-          {mediaType === 'video' ? (
-            <video 
-              src={mediaUrl} 
-              controls 
-              autoPlay 
-              className="max-w-full max-h-[80vh] object-contain"
-              onClick={e => e.stopPropagation()}
-            />
-          ) : (
-            <img 
-              src={mediaUrl} 
-              alt="" 
-              className="max-w-full max-h-[80vh] object-contain"
-              onClick={e => e.stopPropagation()}
-            />
+        
+        <div className="w-full h-full flex flex-col items-center justify-center p-4">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+            </div>
           )}
+          
+          {error && (
+            <div className="text-center p-4 text-red-600 bg-red-50 rounded-lg">
+              <p>{error}</p>
+              <p className="text-sm mt-2">URL: {mediaUrl}</p>
+            </div>
+          )}
+          
+          <div className={`w-full h-full flex items-center justify-center ${isLoading ? 'invisible' : ''}`}>
+            {mediaType === 'video' ? (
+              <video 
+                ref={el => {
+                  if (el) mediaRef.current = el;
+                }}
+                src={mediaUrl} 
+                controls 
+                autoPlay 
+                className="max-w-full max-h-[80vh] object-contain"
+                onClick={e => e.stopPropagation()}
+                onError={(e) => {
+                  console.error('Video error:', e);
+                  setError('動画の再生に失敗しました');
+                  setIsLoading(false);
+                }}
+              />
+            ) : (
+              <img 
+                ref={el => {
+                  if (el) mediaRef.current = el;
+                }}
+                src={mediaUrl} 
+                alt="" 
+                className="max-w-full max-h-[80vh] object-contain"
+                onClick={e => e.stopPropagation()}
+                onError={(e) => {
+                  console.error('Image error:', e);
+                  setError('画像の読み込みに失敗しました');
+                  setIsLoading(false);
+                }}
+              />
+            )}
+          </div>
+          
+          <div className="mt-4 text-sm text-gray-500 text-center">
+            <p>メディアタイプ: {mediaType}</p>
+            <p className="break-all max-w-full overflow-hidden text-ellipsis">
+              URL: {mediaUrl}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -527,12 +597,14 @@ const Projects: React.FC = () => {
       </div>
 
       {/* モーダル */}
-      <MediaModal 
-        isOpen={!!selectedMedia} 
-        onClose={closeModal} 
-        mediaUrl={selectedMedia?.url || ''} 
-        mediaType={selectedMedia?.type === 'gif' ? 'image' : selectedMedia?.type || 'image'}
-      />
+      {selectedMedia && (
+        <MediaModal 
+          isOpen={!!selectedMedia} 
+          onClose={closeModal} 
+          mediaUrl={selectedMedia.url} 
+          mediaType={selectedMedia.type === 'gif' ? 'image' : selectedMedia.type}
+        />
+      )}
     </div>
   );
 };
