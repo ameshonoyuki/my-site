@@ -400,7 +400,66 @@ const featuredContent = [
   }
 ];
 
+// モーダルコンポーネント
+const MediaModal: React.FC<{ isOpen: boolean; onClose: () => void; mediaUrl: string; mediaType: 'image' | 'video' | 'gif' }> = ({ isOpen, onClose, mediaUrl, mediaType }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4" onClick={onClose}>
+      <div className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-lg overflow-hidden" onClick={e => e.stopPropagation()}>
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 transition-colors"
+          aria-label="閉じる"
+        >
+          ✕
+        </button>
+        <div className="w-full h-full flex items-center justify-center p-4">
+          {mediaType === 'video' ? (
+            <video 
+              src={mediaUrl} 
+              controls 
+              autoPlay 
+              className="max-w-full max-h-[80vh] object-contain"
+              onClick={e => e.stopPropagation()}
+            />
+          ) : (
+            <img 
+              src={mediaUrl} 
+              alt="" 
+              className="max-w-full max-h-[80vh] object-contain"
+              onClick={e => e.stopPropagation()}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Projects: React.FC = () => {
+  const [selectedMedia, setSelectedMedia] = React.useState<{url: string; type: 'image' | 'video' | 'gif'} | null>(null);
+
+  const handleMediaClick = (url: string, type: 'image' | 'video' | 'gif') => {
+    setSelectedMedia({ url, type });
+  };
+
+  const closeModal = () => {
+    setSelectedMedia(null);
+  };
+
+  // キーボードのEscキーでモーダルを閉じる
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div className="w-full bg-emerald-50 py-12">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -409,24 +468,27 @@ const Projects: React.FC = () => {
         </h2>
         <div className="w-full flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl">
-            {featuredContent.map((item, index) => (
+            {works.map((work, index) => (
               <motion.div
-                key={item.title}
+                key={work.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="w-full"
+                className={`w-full ${work.colSpan === 2 ? 'sm:col-span-2' : ''}`}
               >
-                <div className={`h-full rounded-2xl overflow-hidden shadow-lg ${colors.card} border ${colors.border} ${colors.hover} transition-all duration-300`}>
+                <div 
+                  className={`h-full rounded-2xl overflow-hidden shadow-lg ${colors.card} border ${colors.border} hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                  onClick={() => handleMediaClick(work.video || work.image, work.video ? 'gif' : 'image')}
+                >
                   <div className="relative aspect-square overflow-hidden">
                     <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
+                      src={work.thumbnail || work.image}
+                      alt={work.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = 'https://placehold.co/600x600/e5e7eb/9ca3af?text=' + encodeURIComponent(item.title);
+                        target.src = 'https://placehold.co/600x600/e5e7eb/9ca3af?text=' + encodeURIComponent(work.title);
                       }}
                       style={{
                         position: 'absolute',
@@ -438,24 +500,24 @@ const Projects: React.FC = () => {
                         objectFit: 'contain'
                       }}
                     />
+                    {work.video && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
+                        <div className="w-16 h-16 rounded-full bg-white bg-opacity-80 flex items-center justify-center">
+                          <svg className="w-8 h-8 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="p-4">
-                    <div className="flex items-center mb-2">
-                      <span className={`${item.bgColor} ${item.textColor} p-2 rounded-lg`}>
-                        {item.icon}
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className={`text-lg font-bold ${colors.text}`}>{work.title}</h3>
+                      <span className="text-sm text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
+                        {work.category}
                       </span>
-                      <h3 className={`ml-3 text-xl font-bold ${colors.text}`}>{item.title}</h3>
                     </div>
-                    <p className={`${colors.textLight} text-sm mb-3`}>{item.description}</p>
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center ${colors.primary} hover:underline font-medium`}
-                    >
-                      {item.buttonText}
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </a>
+                    <p className={`${colors.textLight} text-sm`}>{work.year}</p>
                   </div>
                 </div>
               </motion.div>
@@ -463,6 +525,14 @@ const Projects: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* モーダル */}
+      <MediaModal 
+        isOpen={!!selectedMedia} 
+        onClose={closeModal} 
+        mediaUrl={selectedMedia?.url || ''} 
+        mediaType={selectedMedia?.type === 'gif' ? 'image' : selectedMedia?.type || 'image'}
+      />
     </div>
   );
 };
