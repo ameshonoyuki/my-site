@@ -7,9 +7,9 @@ import { ArrowRight } from 'lucide-react';
 // ---------- 背景画像コンポーネント ---------- //
 const BackgroundImages: React.FC = () => {
   const backgroundImages = [
-    { id: 1, src: '/images/work-6.png', alt: 'Background 1' },
-    { id: 2, src: '/images/work-7.png', alt: 'Background 2' },
-    { id: 3, src: '/images/work-8.png', alt: 'Background 3' },
+    { id: 1, src: '/my-site/assets/images/work-6.png', alt: 'Background 1' },
+    { id: 2, src: '/my-site/assets/images/work-7.png', alt: 'Background 2' },
+    { id: 3, src: '/my-site/assets/images/work-8.png', alt: 'Background 3' },
   ];
 
   return (
@@ -48,11 +48,11 @@ const Section: React.FC<{
 );
 
 // 画像をインポート
-import work1 from './assets/images/work-1.png';
-import work2 from './assets/images/work-2.png';
-import work3 from './assets/images/work-3.png';
-import work6 from './assets/images/work-6.png';
-import work6Video from './assets/videos/work-6.mp4';
+import work1 from '/my-site/assets/images/work-1.png';
+import work2 from '/my-site/assets/images/work-2.png';
+import work3 from '/my-site/assets/images/work-3.png';
+import work6 from '/my-site/assets/images/work-6.png';
+import work6Video from '/my-site/assets/videos/work-6.mp4';
 
 // 作品データ
 const works = [
@@ -203,7 +203,7 @@ const Hero: React.FC = () => (
           transition={{ duration: 0.8, delay: 0.6 }}
           style={{ fontFamily: '"Noto Serif JP", serif' }}
         >
-          幻想的な世界観と鮮やかな色彩で、見る人を魅了するアートを創り続けています。
+          幻想的な世界観と鮮やかな色彩で、見る人を物語の中へ誘うようなビジュアルを制作しています。
         </motion.p>
       </motion.div>
       
@@ -312,7 +312,7 @@ const About: React.FC = () => (
         transition={{ duration: 0.6 }}
       >
         <img
-          src="src/assets/images/work-4.png"
+          src="/my-site/assets/images/work-4.png"
           alt="Ameyuki portrait"
           className="rounded-3xl shadow-xl w-64 h-64 lg:w-80 lg:h-80 object-cover"
           onError={(e) => {
@@ -327,7 +327,7 @@ const About: React.FC = () => (
         transition={{ duration: 0.6 }}
       >
         <p className={`leading-relaxed text-lg lg:text-xl ${colors.text} ${colors.textLight}`}>
-          はじめまして！アメショのユキです。幻想的な色彩と緻密なディテールで、観る人を物語の中へ誘うようなビジュアルを制作しています。AI アートで、Web3/NFT各プロジェクトへ多数のオリジナル作品やファンアートを提供中。
+          はじめまして！アメショのユキです。幻想的な世界観と鮮やかな色彩で、見る人を物語の中へ誘うようなビジュアルを制作しています。AI アートで、Web3/NFT各プロジェクトへ多数のオリジナル作品やファンアートを提供中。
         </p>
       </motion.div>
     </div>
@@ -339,7 +339,7 @@ const featuredContent = [
     title: "OpenSea コレクション",
     description: "NFTアート作品をOpenSeaで公開中。デジタルアートの世界をお楽しみください。",
     link: "https://opensea.io/collection/bailarina-5",
-    image: "src/assets/images/work-5.png",
+    image: "/my-site/assets/images/work-5.png",
     buttonText: "コレクションを見る",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -354,7 +354,7 @@ const featuredContent = [
     title: "Stand.fm 番組",
     description: "デジタルアートや創作活動についてのトークを配信しています。お気軽にお聴きください。",
     link: "https://stand.fm/episodes",
-    image: "src/assets/images/work-4.png",
+    image: "/my-site/assets/images/work-4.png",
     buttonText: "番組を聴く",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
