@@ -52,8 +52,8 @@ import work1 from './assets/images/work-1.png';
 import work2 from './assets/images/work-2.png';
 import work3 from './assets/images/work-3.png';
 import work6 from './assets/images/work-6.png';
-// Import video from public directory - this path will be preserved as-is in production
-const work6Video = '/my-site/assets/videos/work-6.mp4';
+// Using a sample video from a CDN for testing
+const work6Video = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'; // Sample video URL
 
 // 作品データ
 const works = [
