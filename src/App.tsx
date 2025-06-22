@@ -52,8 +52,8 @@ import work1 from './assets/images/work-1.png';
 import work2 from './assets/images/work-2.png';
 import work3 from './assets/images/work-3.png';
 import work6 from './assets/images/work-6.png';
-// Import video using Vite's import syntax
-const work6Video = new URL('../public/assets/videos/work-6.mp4', import.meta.url).href;
+// Import video directly - Vite will handle the path in production
+import work6Video from './assets/videos/work-6.mp4';
 
 // 作品データ
 const works = [
@@ -77,7 +77,7 @@ const works = [
     id: 4,
     title: '天空の踊り子動画',
     year: '2024年',
-    video: '/assets/videos/work-6.mp4',
+    video: work6Video,
     thumbnail: work6,
     category: '動画作品',
     colSpan: 2
@@ -247,6 +247,9 @@ const Hero: React.FC = () => (
                         onClick={(e) => {
                           const video = e.currentTarget;
                           video.paused ? video.play() : video.pause();
+                        }}
+                        onError={(e) => {
+                          console.error('Error loading video:', e);
                         }}
                       />
                       <div 
