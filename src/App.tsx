@@ -52,8 +52,8 @@ import work1 from './assets/images/work-1.png';
 import work2 from './assets/images/work-2.png';
 import work3 from './assets/images/work-3.png';
 import work6 from './assets/images/work-6.png';
-// Import video directly - Vite will handle the path in production
-import work6Video from './assets/videos/work-6.mp4';
+// Import video from public directory - this path will be preserved as-is in production
+const work6Video = '/my-site/assets/videos/work-6.mp4';
 
 // 作品データ
 const works = [
@@ -234,8 +234,30 @@ const Hero: React.FC = () => (
                     <div className="relative w-full h-full">
                       <video 
                         ref={(el) => {
-                          // Store video reference for manual control
-                          if (el) el.muted = true;
+                          if (el) {
+                            el.muted = true;
+                            // Log video source for debugging
+                            console.log('Video source:', el.src);
+                            
+                            // Add event listeners for debugging
+                            el.addEventListener('error', (e) => {
+                              const video = e.target as HTMLVideoElement;
+                              console.error('Video error:', {
+                                code: video.error?.code,
+                                message: video.error?.message,
+                                networkState: video.networkState,
+                                readyState: video.readyState
+                              });
+                            });
+                            
+                            el.addEventListener('loadedmetadata', () => {
+                              console.log('Video metadata loaded');
+                            });
+                            
+                            el.addEventListener('canplay', () => {
+                              console.log('Video can play');
+                            });
+                          }
                         }}
                         src={work.video}
                         poster={work.thumbnail}
@@ -249,7 +271,13 @@ const Hero: React.FC = () => (
                           video.paused ? video.play() : video.pause();
                         }}
                         onError={(e) => {
-                          console.error('Error loading video:', e);
+                          const video = e.currentTarget;
+                          console.error('Video load error details:', {
+                            src: video.src,
+                            networkState: video.networkState,
+                            readyState: video.readyState,
+                            error: video.error
+                          });
                         }}
                       />
                       <div 
