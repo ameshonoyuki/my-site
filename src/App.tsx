@@ -47,13 +47,20 @@ const Section: React.FC<{
   </section>
 );
 
+// 画像をインポート
+import work1 from './assets/images/work-1.png';
+import work2 from './assets/images/work-2.png';
+import work3 from './assets/images/work-3.png';
+import work6 from './assets/images/work-6.png';
+import work6Video from './assets/videos/work-6.mp4';
+
 // 作品データ
 const works = [
   {
     id: 1,
     title: 'にんだお 蛇の目',
     year: '2024年',
-    image: '/src/assets/images/work-1.png',
+    image: work1,
     category: 'AIアート',
     colSpan: 1
   },
@@ -61,7 +68,7 @@ const works = [
     id: 2,
     title: '天空の踊り子',
     year: '2024年',
-    image: '/src/assets/images/work-2.png',
+    image: work2,
     category: 'AIアート',
     colSpan: 2
   },
@@ -69,8 +76,8 @@ const works = [
     id: 4,
     title: '天空の踊り子動画',
     year: '2024年',
-    video: '/src/assets/videos/work-6.mp4',
-    thumbnail: '/src/assets/images/work-2.png',
+    video: work6Video,
+    thumbnail: work6,
     category: '動画作品',
     colSpan: 2
   },
@@ -78,7 +85,7 @@ const works = [
     id: 3,
     title: 'イケてる痛車',
     year: '2024年',
-    image: '/src/assets/images/work-3.png',
+    image: work3,
     category: 'AIアート',
     colSpan: 1
   }
@@ -210,7 +217,7 @@ const Hero: React.FC = () => (
           transition={{ duration: 0.8 }}
         >
           <h2 className={`text-2xl md:text-3xl font-bold text-center mb-12 ${colors.text}`}>作品一覧</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 justify-items-center max-w-6xl mx-auto">
             {works.map((work) => (
               <motion.div
                 key={work.id}
