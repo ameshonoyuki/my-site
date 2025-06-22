@@ -52,8 +52,8 @@ import work1 from './assets/images/work-1.png';
 import work2 from './assets/images/work-2.png';
 import work3 from './assets/images/work-3.png';
 import work6 from './assets/images/work-6.png';
-// Using a sample video from a CDN for testing
-const work6Video = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'; // Sample video URL
+// Using a sample GIF from a CDN for testing
+const work6Gif = 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWk1b2RjZ3V2Z2N5eW1tZHp6eG9zZ3NvZ3V3dWZ1dGJ2b2NlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aTsk3bM3Ld2FKBC/giphy.gif'; // Sample GIF URL
 
 // 作品データ
 const works = [
@@ -77,7 +77,7 @@ const works = [
     id: 4,
     title: '天空の踊り子動画',
     year: '2024年',
-    video: work6Video,
+    video: work6Gif,
     thumbnail: work6,
     category: '動画作品',
     colSpan: 2
